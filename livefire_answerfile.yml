@@ -1,0 +1,86 @@
+hostname: "192.168.110.15"
+username: "admin"
+password: "VMware1!"
+validate_certs: False
+
+ip_pools:
+- display_name: TEP-IP-Pool
+  subnets:
+  - allocation_ranges:
+    - start: "192.168.130.51"
+      end: "192.168.130.79"
+    cidr: "192.168.130.0/24"
+
+overlay_transportzones:
+- display_name: "OVERLAY-TZ"
+  transport_type: "OVERLAY"
+  host_switch_name: "nsxt-hostswitch"
+
+vlan_transportzones:
+- display_name: "VLAN-TZ"
+  transport_type: "VLAN"
+  host_switch_name: "nsxt-hostswitch"
+
+uplink_profiles_hosts:
+- display_name: ESXi-Uplink-Profile_LOADBALANCE_SRCID
+  teaming:
+    active_list:
+    - uplink_name: "uplink-1"
+      uplink_type: PNIC
+    - uplink_name: "uplink-2"
+      uplink_type: PNIC
+    policy: LOADBALANCE_SRCID
+  transport_vlan: 0
+
+application_vlans:
+- display_name: WebLs
+  vlan_id: 10
+- display_name: AppLs
+  vlan_id: 20
+- display_name: DbLs
+  vlan_id: 30
+
+uplink_profiles_edges:
+- display_name: edge-uplink-hostswitch-profile
+  teaming:
+     active_list:
+     - uplink_name: "uplink-1"
+       uplink_type: PNIC
+     policy: FAILOVER_ORDER
+  transport_vlan: 0
+
+
+
+
+
+
+
+
+
+
+
+
+- display_name: Edge01
+  host_switches:
+  - host_switch_profiles:
+    - name: edge-uplink-hostswitch-profile
+      type: UplinkHostSwitchProfile
+    host_switch_name: hostswitch1
+    pnics:
+    - device_name: fp-eth0
+      uplink_name: "uplink-1"
+    ip_assignment_spec:
+      resource_type: StaticIpPoolSpec
+      ip_pool_name: "IPPool-IPV4-1"
+  - host_switch_profiles:
+    - name: edge-uplink-hostswitch-profile
+      type: UplinkHostSwitchProfile
+    host_switch_name: hostswitch2
+    pnics:
+    - device_name: fp-eth1
+      uplink_name: "uplink-1"
+  transport_zone_endpoints:
+  - transport_zone_name: "TZ1"
+  - transport_zone_name: "TZ2"
+  fabric_node_name: "EdgeNode1"
+
