@@ -1,5 +1,5 @@
 # Ansible for NSX-T
-This is a fork of Ansible for NSX-T that I am using for a project. Please refer to the Ansible for NSX-T page if you are interested in automate thye deployment of NSX-T via Ansible. 
+This is a fork of Ansible for NSX-T that I am using for a project. Please refer to the Ansible for NSX-T page if you are interested in automate the deployment of NSX-T via Ansible. 
 
 # Overview
 This repository contains NSX-T Ansible Modules, which one can use with
