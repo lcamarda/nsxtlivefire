@@ -161,8 +161,8 @@ def check_for_update(module, manager_url, mgr_username, mgr_password, validate_c
     existing_transport_node = get_compute_collection_transport_templates_from_display_name(module, manager_url, mgr_username, mgr_password, validate_certs, compute_collection_transport_templates_ids['display_name'])
     if existing_transport_node is None:
         return False
-    #if existing_transport_node.__contains__('transport_zone_endpoints') and compute_collection_transport_templates_ids.__contains__('transport_zone_endpoints'):
-    #    return not id_exist_in_list_dict_obj('transport_zone_id', existing_transport_node['transport_zone_endpoints'], compute_collection_transport_templates_ids['transport_zone_endpoints'])
+#    if existing_transport_node.__contains__('transport_zone_endpoints') and compute_collection_transport_templates_ids.__contains__('transport_zone_endpoints'):
+#        return not id_exist_in_list_dict_obj('transport_zone_id', existing_transport_node['transport_zone_endpoints'], compute_collection_transport_templates_ids['transport_zone_endpoints'])
     if existing_transport_node.__contains__('host_switch_spec') and existing_transport_node['host_switch_spec'].__contains__('host_switches') and \
         compute_collection_transport_templates_ids.__contains__('host_switch_spec') and compute_collection_transport_templates_ids['host_switch_spec'].__contains__('host_switches') and \
         existing_transport_node['host_switch_spec']['host_switches'] != compute_collection_transport_templates_ids['host_switch_spec']['host_switches']:
