@@ -22,6 +22,14 @@ vlan_transportzones:
   transport_type: "VLAN"
   host_switch_name: "nsxt-hostswitch"
 
+edge_vlan_transportzones:
+- display_name: "EXT1-TZ"
+  transport_type: "VLAN"
+  host_switch_name: "ext1-hostswitch"
+- display_name: "EXT2-TZ"
+  transport_type: "VLAN"
+  host_switch_name: "ext2-hostswitch"
+
 uplink_profiles_hosts:
 - display_name: ESXi-Uplink-Profile_LOADBALANCE_SRCID
   teaming:
@@ -31,6 +39,15 @@ uplink_profiles_hosts:
     - uplink_name: "uplink-2"
       uplink_type: PNIC
     policy: LOADBALANCE_SRCID
+  transport_vlan: 0
+
+uplink_profiles_edges:
+- display_name: Edge-Uplink-Profile_FAILOVER_ORDER
+  teaming:
+     active_list:
+     - uplink_name: "uplink-1"
+       uplink_type: PNIC
+     policy: FAILOVER_ORDER
   transport_vlan: 0
 
 application_vlans:
@@ -116,37 +133,68 @@ transport_nodes:
   - transport_zone_name: "OVERLAY-TZ"
   fabric_node_name: "esx-04a.corp.local"
 
-uplink_profiles_edges:
-- display_name: edge-uplink-hostswitch-profile
-  teaming:
-     active_list:
-     - uplink_name: "uplink-1"
-       uplink_type: PNIC
-     policy: FAILOVER_ORDER
-  transport_vlan: 0
 
-
+edges_transport_nodes:
 - display_name: Edge01
   host_switches:
   - host_switch_profiles:
-    - name: edge-uplink-hostswitch-profile
+    - name: Edge-Uplink-Profile_FAILOVER_ORDER
       type: UplinkHostSwitchProfile
-    host_switch_name: hostswitch1
+    host_switch_name: nsxt-hostswitch
     pnics:
-    - device_name: fp-eth0
+    - device_name: fp-eth2
       uplink_name: "uplink-1"
     ip_assignment_spec:
       resource_type: StaticIpPoolSpec
-      ip_pool_name: "IPPool-IPV4-1"
+      ip_pool_name: "TEP-IP-Pool"
   - host_switch_profiles:
-    - name: edge-uplink-hostswitch-profile
+    - name: Edge-Uplink-Profile_FAILOVER_ORDER
       type: UplinkHostSwitchProfile
-    host_switch_name: hostswitch2
+    host_switch_name: ext1-hostswitch
+    pnics:
+    - device_name: fp-eth0
+      uplink_name: "uplink-1"
+  - host_switch_profiles:
+    - name: Edge-Uplink-Profile_FAILOVER_ORDER
+      type: UplinkHostSwitchProfile
+    host_switch_name: ext2-hostswitch
     pnics:
     - device_name: fp-eth1
       uplink_name: "uplink-1"
   transport_zone_endpoints:
-  - transport_zone_name: "TZ1"
-  - transport_zone_name: "TZ2"
+  - transport_zone_name: "OVERLAY-TZ"
+  - transport_zone_name: "EXT1-TZ"
+  - transport_zone_name: "EXT2-TZ"
   fabric_node_name: "EdgeNode1"
+- display_name: Edge02
+  host_switches:
+  - host_switch_profiles:
+    - name: Edge-Uplink-Profile_FAILOVER_ORDER
+      type: UplinkHostSwitchProfile
+    host_switch_name: nsxt-hostswitch
+    pnics:
+    - device_name: fp-eth2
+      uplink_name: "uplink-1"
+    ip_assignment_spec:
+      resource_type: StaticIpPoolSpec
+      ip_pool_name: "TEP-IP-Pool"
+  - host_switch_profiles:
+    - name: Edge-Uplink-Profile_FAILOVER_ORDER
+      type: UplinkHostSwitchProfile
+    host_switch_name: ext1-hostswitch
+    pnics:
+    - device_name: fp-eth0
+      uplink_name: "uplink-1"
+  - host_switch_profiles:
+    - name: Edge-Uplink-Profile_FAILOVER_ORDER
+      type: UplinkHostSwitchProfile
+    host_switch_name: ext2-hostswitch
+    pnics:
+    - device_name: fp-eth1
+      uplink_name: "uplink-1"
+  transport_zone_endpoints:
+  - transport_zone_name: "OVERLAY-TZ"
+  - transport_zone_name: "EXT1-TZ"
+  - transport_zone_name: "EXT2-TZ"
+  fabric_node_name: "EdgeNode2"
 
