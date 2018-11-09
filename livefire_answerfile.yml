@@ -58,6 +58,10 @@ application_vlans:
 - display_name: VLAN-DbLs
   vlan_id: 30
 
+application_overlays:
+- display_name: OV-WebLs
+- display_name: OV-AppLs
+- display_name: OV-DbLs
 
 transport_nodes:
 - display_name: esx01a
