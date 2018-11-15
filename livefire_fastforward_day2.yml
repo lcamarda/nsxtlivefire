@@ -167,7 +167,7 @@
         ip_addresses:
           - 192.168.110.19
         deployment_config:
-          form_factor: "SMALL"
+          form_factor: "MEDIUM"
           node_user_settings:
             cli_password: "VMware1!"
             root_password: "VMware1!"
@@ -202,7 +202,7 @@
         ip_addresses:
           - 192.168.110.20
         deployment_config:
-          form_factor: "SMALL"
+          form_factor: "MEDIUM"
           node_user_settings:
             cli_password: "VMware1!"
             root_password: "VMware1!"
@@ -225,6 +225,81 @@
               prefix_length: "24"
         state: present
 
+
+    - name: Add Third Edge VM
+      nsxt_fabric_nodes:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: False
+        resource_type: "EdgeNode"
+        display_name: "EdgeNode3"
+        ip_addresses:
+          - 192.168.110.21
+        deployment_config:
+          form_factor: "MEDIUM"
+          node_user_settings:
+            cli_password: "VMware1!"
+            root_password: "VMware1!"
+          vm_deployment_config:
+            placement_type: VsphereDeploymentConfig
+            vc_id: "{{compute_manager.id}}"
+            data_network_ids:
+            - "{{Ext1_PG_key.stdout}}"
+            - "{{Ext2_PG_key.stdout}}"
+            - "{{Transport_PG_key.stdout}}"
+            management_network_id: "dvportgroup-263"
+            hostname: "EdgeVM1"
+            compute_id: "domain-c26"
+            storage_id: "datastore-201"
+            default_gateway_addresses:
+            - 192.168.110.1
+            management_port_subnets:
+            - ip_addresses:
+              - 192.168.110.21
+              prefix_length: "24"
+        state: present
+
+
+    - name: Add Fourth Edge VM
+      nsxt_fabric_nodes:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: False
+        resource_type: "EdgeNode"
+        display_name: "EdgeNode4"
+        ip_addresses:
+          - 192.168.110.21
+        deployment_config:
+          form_factor: "MEDIUM"
+          node_user_settings:
+            cli_password: "VMware1!"
+            root_password: "VMware1!"
+          vm_deployment_config:
+            placement_type: VsphereDeploymentConfig
+            vc_id: "{{compute_manager.id}}"
+            data_network_ids:
+            - "{{Ext1_PG_key.stdout}}"
+            - "{{Ext2_PG_key.stdout}}"
+            - "{{Transport_PG_key.stdout}}"
+            management_network_id: "dvportgroup-263"
+            hostname: "EdgeVM2"
+            compute_id: "domain-c26"
+            storage_id: "datastore-202"
+            default_gateway_addresses:
+            - 192.168.110.1
+            management_port_subnets:
+            - ip_addresses:
+              - 192.168.110.21
+              prefix_length: "24"
+        state: present
+
+
+    - name: Remove Edge VMs Memory reservation
+      command: pwsh ./remove_edge_reservations.ps1
+
+
     - name: Create Edge VLAN transport zones
       nsxt_transport_zones:
         hostname: "{{hostname}}"
@@ -242,7 +317,7 @@
 
 
 
-    - name: Create uplink profile for ESXi hosts
+    - name: Create uplink profile for edge nodes
       nsxt_uplink_profiles:
         hostname: "{{hostname}}"
         username: "{{username}}"
@@ -257,8 +332,7 @@
       with_items:
         - "{{uplink_profiles_edges}}"
 
-
-    - name: Create transport node
+    - name: Create edge transport nodes
       nsxt_transport_nodes:
         hostname: "{{hostname}}"
         username: "{{username}}"
@@ -283,7 +357,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "EXT1_VLAN"
+        display_name: "VLAN-Ext1Ls"
         replication_mode: SOURCE
         admin_state: UP
         transport_zone_name: "EXT1-TZ"
@@ -296,7 +370,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "EXT2_VLAN"
+        display_name: "VLAN-Ext2Ls"
         replication_mode: SOURCE
         admin_state: UP
         transport_zone_name: "EXT2-TZ"
@@ -318,13 +392,15 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: edge-cluster-1
+        display_name: edge-cluster-1-SiteA
         cluster_profile_bindings:
         - profile_id: '{{ cluster_profiles["results"][1]["id"] }}'
           resource_type: EdgeHighAvailabilityProfile
         members:
         - transport_node_name: "Edge01"
         - transport_node_name: "Edge02"
+        - transport_node_name: "Edge03"
+        - transport_node_name: "Edge04"
         state: present
 
     - name: Create T0 logical router
@@ -333,8 +409,8 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "tier-0-infrastructure"
-        edge_cluster_name: edge-cluster-1
+        display_name: "t0-infrastructure-SiteA"
+        edge_cluster_name: edge-cluster-1-SiteA
         router_type: TIER0
         high_availability_mode: ACTIVE_ACTIVE
         state: "present"
@@ -346,8 +422,8 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "T0_EXT1"
-        logical_switch_name: "EXT1_VLAN"
+        display_name: "T0-Ext1Ls"
+        logical_switch_name: "VLAN-Ext1Ls"
         admin_state: UP
         state: "present"
       register: lsp_T0_EXT1
@@ -358,8 +434,8 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "T0_EXT2"
-        logical_switch_name: "EXT2_VLAN"
+        display_name: "T0_Ext2Ls"
+        logical_switch_name: "VLAN-Ext2Ls"
         admin_state: UP
         state: "present"
       register: lsp_T0_EXT2
@@ -371,7 +447,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: uplink_ext1
+        display_name: LIF-VLAN-Ext1Ls
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
         edge_cluster_member_index: [0]
@@ -390,7 +466,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: uplink_ext2
+        display_name: LIF-VLAN-Ext2Ls
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
         edge_cluster_member_index: [1]

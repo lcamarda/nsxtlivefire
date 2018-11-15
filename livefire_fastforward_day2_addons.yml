@@ -16,8 +16,6 @@
         validate_certs: no
       register: result
 
-    - debug: var=result
-
 
     - name: Read BGP configuration on T0 router
       uri:
@@ -29,8 +27,6 @@
         force_basic_auth: yes
         validate_certs: no
       register: result2
-
-    - debug: var=result2
 
 
     - name: Enable BGP on T0 router
@@ -63,7 +59,6 @@
         validate_certs: no
       register: result3
 
-    - debug: var=result3
 
     - name: Configure BGP peering to CSR-01a
       uri:
@@ -123,8 +118,8 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "tier-1 4 Tier App"
-        edge_cluster_name: edge-cluster-1
+        display_name: "t1-tenant1"
+        edge_cluster_name: edge-cluster-1-SiteA
         router_type: TIER1
         high_availability_mode: ACTIVE_STANDBY
         state: "present"
@@ -144,8 +139,6 @@
       with_items:
         - "{{application_overlays}}"
       register: overlay_lsp
-
-    - debug: var=overlay_lsp
 
 
     - name: Create logical router port for web LS
