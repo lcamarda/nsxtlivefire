@@ -92,7 +92,7 @@ Add-VDSwitchPhysicalNetworkAdapter -VMHostNetworkAdapter $hostsPhysicalNic2 -Dis
 
 $routedLink1 = New-VDPortGroup -Name Ext1_PG  -VDSwitch $myVDSwitch -VlanId 100
 $routedLink2 = New-VDPortGroup -Name Ext2_PG  -VDSwitch $myVDSwitch -VlanId 200
-$transportPg = New-VDPortGroup -Name Transport_PG  -VDSwitch $myVDSwitch -VlanTrunkRange 1-4000
+$transportPg = New-VDPortGroup -Name Transport_PG  -VDSwitch $myVDSwitch -VlanTrunkRange 0-4000
 
 #Set teaming policy for edge vDS
 
