@@ -416,66 +416,135 @@
         state: "present"
       register: t0
 
-    - name: Create logical port on EXT1_VLAN LS to connect T0 router
+    - name: Create first logical port on EXT1_VLAN LS to connect T0 router
       nsxt_logical_ports:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "T0-Ext1Ls"
+        display_name: "T0-Ext1LpA"
         logical_switch_name: "VLAN-Ext1Ls"
         admin_state: UP
         state: "present"
-      register: lsp_T0_EXT1
+      register: lsp_T0_EXT1a
 
-    - name: Create logical port on EXT2_VLAN LS to connect T0 router
+    - name: Create first logical port on EXT2_VLAN LS to connect T0 router
       nsxt_logical_ports:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "T0_Ext2Ls"
+        display_name: "T0_Ext2LpA"
         logical_switch_name: "VLAN-Ext2Ls"
         admin_state: UP
         state: "present"
-      register: lsp_T0_EXT2
+      register: lsp_T0_EXT2a
 
 
-    - name: Create logical router port on T0 router to interconnect uplink VLAN EXT1
+    - name: Create second logical port on EXT1_VLAN LS to connect T0 router
+      nsxt_logical_ports:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: False
+        display_name: "T0-Ext1LpB"
+        logical_switch_name: "VLAN-Ext1Ls"
+        admin_state: UP
+        state: "present"
+      register: lsp_T0_EXT1b
+
+    - name: Create second logical port on EXT2_VLAN LS to connect T0 router
+      nsxt_logical_ports:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: False
+        display_name: "T0_Ext2LpB"
+        logical_switch_name: "VLAN-Ext2Ls"
+        admin_state: UP
+        state: "present"
+      register: lsp_T0_EXT2b
+
+
+    - name: Create logical router port on T0 router EN1 to interconnect uplink VLAN EXT1
       nsxt_logical_router_ports:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: LIF-VLAN-Ext1Ls
+        display_name: LIF-VLAN-Ext1LsEN1
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
         edge_cluster_member_index: [0]
         linked_logical_switch_port_id:
           target_type: LogicalPort
-          target_id:  "{{lsp_T0_EXT1.id }}"
+          target_id:  "{{lsp_T0_EXT1a.id }}"
         subnets:
         - ip_addresses:
           - 192.168.254.13
           prefix_length: 29
         state: "present"
 
-    - name: Create logical router port on T0 router to interconnect uplink VLAN EXT2
+    - name: Create logical router port on T0 router EN2 to interconnect uplink VLAN EXT2
       nsxt_logical_router_ports:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: LIF-VLAN-Ext2Ls
+        display_name: LIF-VLAN-Ext2LsEN2
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
         edge_cluster_member_index: [1]
         linked_logical_switch_port_id:
           target_type: LogicalPort
-          target_id:  "{{lsp_T0_EXT2.id }}"
+          target_id:  "{{lsp_T0_EXT2a.id }}"
         subnets:
         - ip_addresses:
           - 192.168.254.21
           prefix_length: 29
         state: "present"
 
+
+    - name: Create logical router port on T0 router EN2 to interconnect uplink VLAN EXT1
+      nsxt_logical_router_ports:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: False
+        display_name: LIF-VLAN-Ext1LsEN2
+        resource_type: LogicalRouterUpLinkPort
+        logical_router_id: "{{t0.id}}"
+        edge_cluster_member_index: [1]
+        linked_logical_switch_port_id:
+          target_type: LogicalPort
+          target_id:  "{{lsp_T0_EXT1b.id }}"
+        subnets:
+        - ip_addresses:
+          - 192.168.254.14
+          prefix_length: 29
+        state: "present"
+
+    - name: Create logical router port on T0 router EN1 to interconnect uplink VLAN EXT2
+      nsxt_logical_router_ports:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: False
+        display_name: LIF-VLAN-Ext2LsEN1
+        resource_type: LogicalRouterUpLinkPort
+        logical_router_id: "{{t0.id}}"
+        edge_cluster_member_index: [0]
+        linked_logical_switch_port_id:
+          target_type: LogicalPort
+          target_id:  "{{lsp_T0_EXT2b.id }}"
+        subnets:
+        - ip_addresses:
+          - 192.168.254.22
+          prefix_length: 29
+        state: "present"
+
+
+
+
+
+        

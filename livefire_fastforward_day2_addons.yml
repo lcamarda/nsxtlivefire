@@ -74,9 +74,13 @@
           - 
             type: IPV4_UNICAST
             enabled: true
+          source_addresses:
+            - 192.168.254.13
+            - 192.168.254.14
         body_format: json
         force_basic_auth: yes
         validate_certs: no
+
 
     - name: Configure BGP peering to CSR-02a
       uri:
@@ -92,11 +96,15 @@
           -
             type: IPV4_UNICAST
             enabled: true
+          source_addresses:
+            - 192.168.254.21
+            - 192.168.254.22
         body_format: json
         force_basic_auth: yes
         validate_certs: no
 
 
+        
     - name: "Create Overlay Logical Switches for 4 Tiers Application"
       nsxt_logical_switches:
         hostname: "{{hostname}}"
