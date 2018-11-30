@@ -434,7 +434,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "T0_Ext2LpA"
+        display_name: "T0-Ext2LpA"
         logical_switch_name: "VLAN-Ext2Ls"
         admin_state: UP
         state: "present"
@@ -459,7 +459,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "T0_Ext2LpB"
+        display_name: "T0-Ext2LpB"
         logical_switch_name: "VLAN-Ext2Ls"
         admin_state: UP
         state: "present"
@@ -472,7 +472,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: LIF-VLAN-Ext1LsEN1
+        display_name: LRP-VLAN-Ext1Ls_EN1
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
         edge_cluster_member_index: [0]
@@ -491,7 +491,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: LIF-VLAN-Ext2LsEN2
+        display_name: LRP-VLAN-Ext2Ls_EN2
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
         edge_cluster_member_index: [1]
@@ -511,7 +511,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: LIF-VLAN-Ext1LsEN2
+        display_name: LRP-VLAN-Ext1Ls_EN2
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
         edge_cluster_member_index: [1]
@@ -530,7 +530,7 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: LIF-VLAN-Ext2LsEN1
+        display_name: LRP-VLAN-Ext2Ls_EN1
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
         edge_cluster_member_index: [0]

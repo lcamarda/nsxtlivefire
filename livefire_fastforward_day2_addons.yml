@@ -159,6 +159,7 @@
         body:
           resource_type: LogicalRouterDownLinkPort
           logical_router_id: "{{T1.id}}"
+          display_name: RLP-OV-WebLs
           linked_logical_switch_port_id:
            target_type: LogicalPort
            target_id: "{{overlay_lsp.results[0].id}}"
@@ -181,6 +182,7 @@
         body:
           resource_type: LogicalRouterDownLinkPort
           logical_router_id: "{{T1.id}}"
+          display_name: RLP-OV-AppLs
           linked_logical_switch_port_id:
            target_type: LogicalPort
            target_id: "{{overlay_lsp.results[1].id}}"
@@ -203,6 +205,7 @@
         body:
           resource_type: LogicalRouterDownLinkPort
           logical_router_id: "{{T1.id}}"
+          display_name: RLP-OV-DbLs
           linked_logical_switch_port_id:
            target_type: LogicalPort
            target_id: "{{overlay_lsp.results[2].id}}"

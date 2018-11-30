@@ -4,7 +4,7 @@ password: "VMware1!"
 validate_certs: False
 
 ip_pools:
-- display_name: TEP-IP-POOL
+- display_name: TEP-IP-Pool-SiteA
   subnets:
   - allocation_ranges:
     - start: "192.168.130.51"
@@ -77,7 +77,7 @@ transport_nodes:
       uplink_name: "uplink-2"
     ip_assignment_spec:
       resource_type: StaticIpPoolSpec
-      ip_pool_name: "TEP-IP-POOL"
+      ip_pool_name: "TEP-IP-Pool-SiteA"
   transport_zone_endpoints:
   - transport_zone_name: "VLAN-TZ"
   - transport_zone_name: "OVERLAY-TZ"
@@ -95,7 +95,7 @@ transport_nodes:
       uplink_name: "uplink-2"
     ip_assignment_spec:
       resource_type: StaticIpPoolSpec
-      ip_pool_name: "TEP-IP-POOL"
+      ip_pool_name: "TEP-IP-Pool-SiteA"
   transport_zone_endpoints:
   - transport_zone_name: "VLAN-TZ"
   - transport_zone_name: "OVERLAY-TZ"
@@ -113,7 +113,7 @@ transport_nodes:
       uplink_name: "uplink-2"
     ip_assignment_spec:
       resource_type: StaticIpPoolSpec
-      ip_pool_name: "TEP-IP-POOL"
+      ip_pool_name: "TEP-IP-Pool-SiteA"
   transport_zone_endpoints:
   - transport_zone_name: "VLAN-TZ"
   - transport_zone_name: "OVERLAY-TZ"
@@ -131,7 +131,7 @@ transport_nodes:
       uplink_name: "uplink-2"
     ip_assignment_spec:
       resource_type: StaticIpPoolSpec
-      ip_pool_name: "TEP-IP-POOL"
+      ip_pool_name: "TEP-IP-Pool-SiteA"
   transport_zone_endpoints:
   - transport_zone_name: "VLAN-TZ"
   - transport_zone_name: "OVERLAY-TZ"
@@ -150,7 +150,7 @@ edges_transport_nodes:
       uplink_name: "uplink-1"
     ip_assignment_spec:
       resource_type: StaticIpPoolSpec
-      ip_pool_name: "TEP-IP-POOL"
+      ip_pool_name: "TEP-IP-Pool-SiteA"
   - host_switch_profiles:
     - name: edge-uplink-profile_FAILOVER_ORDER
       type: UplinkHostSwitchProfile
@@ -181,7 +181,7 @@ edges_transport_nodes:
       uplink_name: "uplink-1"
     ip_assignment_spec:
       resource_type: StaticIpPoolSpec
-      ip_pool_name: "TEP-IP-POOL"
+      ip_pool_name: "TEP-IP-Pool-SiteA"
   - host_switch_profiles:
     - name: edge-uplink-profile_FAILOVER_ORDER
       type: UplinkHostSwitchProfile
@@ -212,7 +212,7 @@ edges_transport_nodes:
       uplink_name: "uplink-1"
     ip_assignment_spec:
       resource_type: StaticIpPoolSpec
-      ip_pool_name: "TEP-IP-POOL"
+      ip_pool_name: "TEP-IP-Pool-SiteA"
   - host_switch_profiles:
     - name: edge-uplink-profile_FAILOVER_ORDER
       type: UplinkHostSwitchProfile
@@ -243,7 +243,7 @@ edges_transport_nodes:
       uplink_name: "uplink-1"
     ip_assignment_spec:
       resource_type: StaticIpPoolSpec
-      ip_pool_name: "TEP-IP-POOL"
+      ip_pool_name: "TEP-IP-Pool-SiteA"
   - host_switch_profiles:
     - name: edge-uplink-profile_FAILOVER_ORDER
       type: UplinkHostSwitchProfile
