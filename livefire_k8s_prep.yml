@@ -20,8 +20,8 @@
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: "t0-K8S"
-        edge_cluster_name: edge-cluster-1-SiteA
+        display_name: "t0-kubernetes-SiteA"
+        edge_cluster_name: edge-cluster-2-SiteA
         router_type: TIER0
         high_availability_mode: ACTIVE_STANDBY
         state: "present"
@@ -78,16 +78,16 @@
       register: lsp_T0_EXT2b
 
 
-    - name: Create logical router port on T0 router EN1 to interconnect uplink VLAN EXT1
+    - name: Create logical router port on T0 router EN3 to interconnect uplink VLAN EXT1
       nsxt_logical_router_ports:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: VLAN-Ext1LsEN1
+        display_name: VLAN-Ext1LsEN3
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
-        edge_cluster_member_index: [2]
+        edge_cluster_member_index: [0]
         linked_logical_switch_port_id:
           target_type: LogicalPort
           target_id:  "{{lsp_T0_EXT1a.id }}"
@@ -97,16 +97,16 @@
           prefix_length: 29
         state: "present"
 
-    - name: Create logical router port on T0 router EN2 to interconnect uplink VLAN EXT2
+    - name: Create logical router port on T0 router EN4 to interconnect uplink VLAN EXT2
       nsxt_logical_router_ports:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: VLAN-Ext2LsEN2
+        display_name: VLAN-Ext2LsEN4
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
-        edge_cluster_member_index: [3]
+        edge_cluster_member_index: [1]
         linked_logical_switch_port_id:
           target_type: LogicalPort
           target_id:  "{{lsp_T0_EXT2a.id }}"
@@ -117,16 +117,16 @@
         state: "present"
 
 
-    - name: Create logical router port on T0 router EN2 to interconnect uplink VLAN EXT1
+    - name: Create logical router port on T0 router EN4 to interconnect uplink VLAN EXT1
       nsxt_logical_router_ports:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: VLAN-Ext1LsEN2
+        display_name: VLAN-Ext1LsEN4
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
-        edge_cluster_member_index: [3]
+        edge_cluster_member_index: [1]
         linked_logical_switch_port_id:
           target_type: LogicalPort
           target_id:  "{{lsp_T0_EXT1b.id }}"
@@ -136,16 +136,16 @@
           prefix_length: 29
         state: "present"
 
-    - name: Create logical router port on T0 router EN1 to interconnect uplink VLAN EXT2
+    - name: Create logical router port on T0 router EN3 to interconnect uplink VLAN EXT2
       nsxt_logical_router_ports:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
         validate_certs: False
-        display_name: VLAN-Ext2LsEN1
+        display_name: VLAN-Ext2LsEN3
         resource_type: LogicalRouterUpLinkPort
         logical_router_id: "{{t0.id}}"
-        edge_cluster_member_index: [2]
+        edge_cluster_member_index: [0]
         linked_logical_switch_port_id:
           target_type: LogicalPort
           target_id:  "{{lsp_T0_EXT2b.id }}"
@@ -294,13 +294,9 @@
             description: BGP learns all routes
             destination: BGP
             sources:
-            - STATIC
-            - NSX_CONNECTED
             - NSX_STATIC
             - TIER0_NAT
-            - TIER1_NAT
             - TIER1_LB_VIP
-            - TIER1_LB_SNAT
           _revision: "{{T0redrules.json._revision}}"
         body_format: json
         force_basic_auth: yes
@@ -315,14 +311,30 @@
         user: "admin"
         password: "VMware1!"
         body:
-          display_name: PODs-IP-Block
+          display_name: K8S-IP-BLOCK
           description: K8s pods IP will be allocated from this pool
-          cidr: 172.20.0.0/16
+          cidr: 10.4.0.0/16
         body_format: json
         force_basic_auth: yes
         validate_certs: no
         status_code: 201
 
+    - name: Add IP Block for K8s PODs NoNat
+      uri:
+        method: POST
+        url:  https://{{hostname}}/api/v1/pools/ip-blocks
+        user: "admin"
+        password: "VMware1!"
+        body:
+          display_name: K8S-NO-NAT-BLOCK
+          description: K8s pods IP will be allocated from this pool
+          cidr: 172.30.0.0/16
+        body_format: json
+        force_basic_auth: yes
+        validate_certs: no
+        status_code: 201
+
+        
     - name: Add IP Pool for K8s SNATs
       uri:
         method: POST
@@ -330,15 +342,28 @@
         user: "admin"
         password: "VMware1!"
         body:
-          display_name: K8s-Snat-Pool
+          display_name: K8S-EXT-NAT-POOL
           subnets:
           - allocation_ranges:
-            - start: 172.16.200.10
-              end: 172.16.200.20
-            gateway_ip: 172.16.200.1
-            cidr: 172.16.200.0/24
+            - start: 172.31.0.1
+              end: 172.31.0.254
+            cidr: 172.31.0.0/24
         body_format: json
         force_basic_auth: yes
         validate_certs: no
         status_code: 201
+
+
+    - name: "Create Overlay Logical Switch for K8S nodes"
+      nsxt_logical_switches:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: False
+        display_name: "K8s-Node-VIF"
+        replication_mode: SOURCE
+        admin_state: UP
+        transport_zone_name: "{{overlay_transportzones[0].display_name}}"
+        state: "present"
+
 

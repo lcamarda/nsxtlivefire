@@ -226,74 +226,6 @@
         state: present
 
 
-    - name: Add Third Edge VM
-      nsxt_fabric_nodes:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: False
-        resource_type: "EdgeNode"
-        display_name: "EdgeNode3"
-        ip_addresses:
-          - 192.168.110.21
-        deployment_config:
-          form_factor: "MEDIUM"
-          node_user_settings:
-            cli_password: "VMware1!"
-            root_password: "VMware1!"
-          vm_deployment_config:
-            placement_type: VsphereDeploymentConfig
-            vc_id: "{{compute_manager.id}}"
-            data_network_ids:
-            - "{{Ext1_PG_key.stdout}}"
-            - "{{Ext2_PG_key.stdout}}"
-            - "{{Transport_PG_key.stdout}}"
-            management_network_id: "dvportgroup-263"
-            hostname: "EdgeVM1"
-            compute_id: "domain-c26"
-            storage_id: "datastore-201"
-            default_gateway_addresses:
-            - 192.168.110.1
-            management_port_subnets:
-            - ip_addresses:
-              - 192.168.110.21
-              prefix_length: "24"
-        state: present
-
-
-    - name: Add Fourth Edge VM
-      nsxt_fabric_nodes:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: False
-        resource_type: "EdgeNode"
-        display_name: "EdgeNode4"
-        ip_addresses:
-          - 192.168.110.23
-        deployment_config:
-          form_factor: "MEDIUM"
-          node_user_settings:
-            cli_password: "VMware1!"
-            root_password: "VMware1!"
-          vm_deployment_config:
-            placement_type: VsphereDeploymentConfig
-            vc_id: "{{compute_manager.id}}"
-            data_network_ids:
-            - "{{Ext1_PG_key.stdout}}"
-            - "{{Ext2_PG_key.stdout}}"
-            - "{{Transport_PG_key.stdout}}"
-            management_network_id: "dvportgroup-263"
-            hostname: "EdgeVM2"
-            compute_id: "domain-c26"
-            storage_id: "datastore-202"
-            default_gateway_addresses:
-            - 192.168.110.1
-            management_port_subnets:
-            - ip_addresses:
-              - 192.168.110.23
-              prefix_length: "24"
-        state: present
 
 
     - name: Remove Edge VMs Memory reservation
@@ -399,8 +331,6 @@
         members:
         - transport_node_name: "Edge01"
         - transport_node_name: "Edge02"
-        - transport_node_name: "Edge03"
-        - transport_node_name: "Edge04"
         state: present
 
     - name: Create T0 logical router
